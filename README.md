@@ -99,7 +99,27 @@ tmdb.key=…
 calendar.urls=webcal://…,webcal://…
 ```
 
+## Privacy
+
+No account, no analytics, no ads. Lumen only talks to these servers:
+
+| Server | Why | When |
+|---|---|---|
+| `api.open-meteo.com`, `geocoding-api.open-meteo.com` | Weather for the place you set in Lumen's settings | every 30 min |
+| Your calendar links | Your week calendar | every 5 min, if set |
+| `api.themoviedb.org`, `image.tmdb.org` | Episode number and image (series name + episode title are sent) | when something plays, if a TMDB key is set |
+| `www.primevideo.com` | Title and image of what plays in Prime Video (content ID is sent) | when Prime Video plays |
+| `apis.justwatch.com` | Link to the Disney+ series page (series name is sent) | when Disney+ plays |
+| Image addresses the playing app reports | Cover art | when something plays |
+
+Why the special permissions: **reading the system log** is how Lumen notices the Home button
+(Fire OS doesn't tell apps otherwise), **notification access** is how it sees what's playing and
+Netflix's "continue watching" entries, **secure settings** let it switch its own services back on
+after updates. Everything stays on the TV.
+
 ## Good to know
+
+- **The interface is German for now.** An English version is a perfect first contribution.
 
 - Lumen uses unofficial ways to read what's playing (media sessions, Fire TV recommendations) and
   to find Disney+ links ([JustWatch](https://www.justwatch.com)). Apps can change and break this any time.
