@@ -26,3 +26,6 @@ debloat-candidates.md
 
 # Claude Code local state
 .claude/settings.local.json
+
+# Private drafts (launch posts etc.)
+/drafts/
