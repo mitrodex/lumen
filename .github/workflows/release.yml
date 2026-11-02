@@ -60,7 +60,7 @@ jobs:
           cp app/build/outputs/apk/release/app-release.apk dist/lumen.apk
           cp tv-install.sh tv-install.bat dist/
 
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: dist/*
           generate_release_notes: true
