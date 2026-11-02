@@ -51,7 +51,7 @@ internal object Ics {
                 ?: e["DURATION"]?.let { d -> runCatching { start.plus(Duration.parse(d.value)) }.getOrNull() }
                 ?: if (allDay) start.plusDays(1) else start
             val length = Duration.between(start, end)
-            val title = unescape(e["SUMMARY"]?.value ?: "Termin")
+            val title = unescape(e["SUMMARY"]?.value ?: "—")
             val uid = e["UID"]?.value
             val excluded = e.filterKeys { it.startsWith("EXDATE") }.values
                 .flatMap { p -> p.value.split(',').mapNotNull { v -> time(Prop("EXDATE", p.params, v))?.toEpochSecond() } }

@@ -5,7 +5,7 @@ plugins {
 }
 
 // Version: einzige Quelle. Für ein Release hier erhöhen und denselben Tag pushen (v0.1.0).
-val lumenVersion = "0.1.0"
+val lumenVersion = "0.2.0"
 
 // Private Werte aus local.properties (nie im Repo).
 val localProps = rootProject.file("local.properties").takeIf { it.exists() }?.readLines().orEmpty()

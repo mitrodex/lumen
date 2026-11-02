@@ -1,5 +1,9 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.L10n
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
@@ -86,11 +90,11 @@ fun WeekCalendar(
     val from = thisWeek.plusWeeks(weekOffset.toLong())
     val today = Instant.ofEpochMilli(model.now).atZone(zone).toLocalDate()
     val days = List(7) { from.toLocalDate().plusDays(it.toLong()) }
-    val month = days[3].month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.GERMAN)
+    val month = days[3].month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, L10n.locale)
     val heading = when (weekOffset) {
-        0 -> "Diese Woche"
-        1 -> "Nächste Woche"
-        else -> "In $weekOffset Wochen"
+        0 -> str(R.string.cal_this_week)
+        1 -> str(R.string.cal_next_week)
+        else -> str(R.string.cal_in_weeks, weekOffset)
     }
 
     // Ohne Fokus bewusst „flacher“ als anwählbare Kacheln: kein leuchtender Rand, kein Glanz, Tage
@@ -146,7 +150,7 @@ fun WeekCalendar(
         }
         if (!Calendar.configured(LocalContext.current)) {
             LText(
-                "Noch kein Kalender verbunden", 13.sp, Modifier.padding(start = 6.dp, bottom = 8.dp),
+                str(R.string.cal_not_connected), 13.sp, Modifier.padding(start = 6.dp, bottom = 8.dp),
                 FontWeight.Medium, alpha = 0.6f,
             )
         }
@@ -189,7 +193,7 @@ private fun DayColumn(day: LocalDate, isToday: Boolean, isPast: Boolean, events:
             .padding(horizontal = 5.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val name = day.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.GERMAN).removeSuffix(".")
+        val name = day.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, L10n.locale).removeSuffix(".")
         LText(name.uppercase(), 11.sp, weight = FontWeight.SemiBold, alpha = 0.7f * dim)
         Spacer(Modifier.height(4.dp))
         // Heute: Datum im roten Kreis wie bei Apple.
@@ -223,9 +227,9 @@ private fun EventChip(e: CalEvent, day: LocalDate, dim: Float) {
             val zone = ZoneId.systemDefault()
             val startsToday = Instant.ofEpochMilli(e.start).atZone(zone).toLocalDate() == day
             val time = when {
-                e.allDay -> "ganztägig"
+                e.allDay -> str(R.string.cal_all_day)
                 startsToday -> TIME.format(Instant.ofEpochMilli(e.start).atZone(zone))
-                else -> "weiter"
+                else -> str(R.string.cal_continues)
             }
             LText(time, 10.sp, weight = FontWeight.Medium, alpha = 0.75f * dim)
             LText(e.title, 11.sp, weight = FontWeight.SemiBold, alpha = dim, align = TextAlign.Start)

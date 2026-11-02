@@ -28,8 +28,10 @@ AI can't hold a remote. Every pull request needs someone who installs it and tri
 2. Install: `./tv-install.sh <your-fire-tv-ip> app-release.apk` (see [README](README.md#install)).
 3. Comment what worked and what didn't. Photos of the TV are perfect.
 
-Also great: [🐞 bug reports](../../issues/new?template=bug.yml), and telling us which Fire TV
-models Lumen runs on.
+Also great: [🐞 bug reports](../../issues/new?template=bug.yml), telling us which Fire TV
+models Lumen runs on, and **translations**: all texts are in
+[`strings.xml`](app/src/main/res/values/strings.xml) – copy it to `values-xx/` (xx = your language
+code) and translate, or let an AI do it and check the result.
 
 ## 3. Build it yourself with an AI assistant
 

@@ -119,7 +119,8 @@ after updates. Everything stays on the TV.
 
 ## Good to know
 
-- **The interface is German for now.** An English version is a perfect first contribution.
+- **Languages:** English and German, following the TV's system language (or pick one in Lumen's settings).
+  Want your language? Copy `app/src/main/res/values/strings.xml` to `values-xx/` and translate – or ask an AI to do it.
 
 - Lumen uses unofficial ways to read what's playing (media sessions, Fire TV recommendations) and
   to find Disney+ links ([JustWatch](https://www.justwatch.com)). Apps can change and break this any time.

@@ -2,6 +2,7 @@
 -keep class de.tb.lumen.HomeWatcherService
 -keep class de.tb.lumen.BootReceiver
 -keep class de.tb.lumen.ConfigReceiver
+-keep class de.tb.lumen.LumenApp
 -keep class de.tb.lumen.MediaWatcher
 -keep class de.tb.lumen.LumenDream
 -keep class de.tb.lumen.LumenVoiceService

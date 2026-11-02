@@ -47,6 +47,9 @@ The Fire TV needs ADB debugging enabled (Settings → My Fire TV → Developer o
   1 GB RAM, every dependency costs).
 - **Code comments are in German** (the original author's language). Keep writing them in German so
   files stay consistent; README/docs/PRs are in English.
+- **No visible text in code.** Everything the user sees goes into `res/values/strings.xml` (English)
+  and `res/values-de/strings.xml` (German), read with `str(R.string.x)` (works everywhere, see
+  `L10n.kt`). New text → add it to both files.
 - Short `object`s for services (`Calendar`, `Weather`, `NowPlaying`), state in `LauncherModel`,
   UI in `ui/`. Match the surrounding code: naming, comment density, idioms.
 - Network calls only on background threads (`Executors`/`Dispatchers.IO`), always with timeouts

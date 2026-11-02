@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -77,9 +80,9 @@ fun TopBar(
                 .padding(5.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Tab("Start", screen == Screen.Home, Modifier.focusRequester(tabs.home)) { onSelect(Screen.Home) }
-            Tab("Apps", screen == Screen.Apps, Modifier.focusRequester(tabs.apps)) { onSelect(Screen.Apps) }
-            Tab("Suche", screen == Screen.Search, Modifier.focusRequester(tabs.search)) { onSelect(Screen.Search) }
+            Tab(str(R.string.tab_home), screen == Screen.Home, Modifier.focusRequester(tabs.home)) { onSelect(Screen.Home) }
+            Tab(str(R.string.tab_apps), screen == Screen.Apps, Modifier.focusRequester(tabs.apps)) { onSelect(Screen.Apps) }
+            Tab(str(R.string.tab_search), screen == Screen.Search, Modifier.focusRequester(tabs.search)) { onSelect(Screen.Search) }
         }
         RoundButton(LumenIcons.Toggles, onControl, Modifier.align(Alignment.CenterEnd))
     }

@@ -114,7 +114,7 @@ class MediaWatcher : NotificationListenerService() {
         val numbered = subtitle?.let(::parseNumberedEpisode)
         val parsed = if (numbered != null) {
             NowPlayingInfo(
-                c.packageName, numbered.title, title, System.currentTimeMillis(),
+                c.packageName, numbered.title.ifBlank { str(R.string.episode_n, numbered.episode) }, title, System.currentTimeMillis(),
                 isSeries = true, season = numbered.season, episode = numbered.episode,
             )
         } else {
@@ -158,7 +158,7 @@ class MediaWatcher : NotificationListenerService() {
             if (key != lastKey) return@execute
             val info = NowPlayingInfo(
                 c.packageName,
-                title = t.season?.let { "Staffel $it" } ?: t.name,
+                title = t.season?.let { str(R.string.season_n, it) } ?: t.name,
                 subtitle = t.name.takeIf { t.season != null },
                 time = System.currentTimeMillis(),
                 isSeries = t.season != null,

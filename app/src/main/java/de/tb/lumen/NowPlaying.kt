@@ -22,7 +22,7 @@ data class NowPlayingInfo(
     val mediaId: String? = null,
 ) {
     /** „S3 F12“, wenn bekannt. */
-    val episodeLabel: String? get() = if (season != null && episode != null) "S$season F$episode" else null
+    val episodeLabel: String? get() = if (season != null && episode != null) str(R.string.episode_label, season, episode) else null
 }
 
 /**

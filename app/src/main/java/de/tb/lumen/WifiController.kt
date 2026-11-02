@@ -87,11 +87,11 @@ class WifiController(private val context: Context) {
             wm.addNetwork(cfg)
         }
         if (id < 0) {
-            status = "Netz konnte nicht angelegt werden"
+            status = str(R.string.wifi_add_failed)
             return false
         }
         val ok = wm.enableNetwork(id, true) && wm.reconnect()
-        status = if (ok) "Verbinde mit ${net.ssid} …" else "Verbinden fehlgeschlagen"
+        status = if (ok) str(R.string.wifi_connecting, net.ssid) else str(R.string.wifi_connect_failed)
         return ok
     }
 }

@@ -203,11 +203,11 @@ class HomeWatcherService : AccessibilityService() {
     private fun focusRestartEntry() {
         val root = rootInActiveWindow
         val entry = root?.takeIf { it.packageName == AppRepository.FIRE_SETTINGS }
-            ?.findAccessibilityNodeInfosByText(RESTART_LABEL)
-            ?.firstOrNull { it.text?.toString().equals(RESTART_LABEL, ignoreCase = true) }
+            ?.let { r -> RESTART_LABELS.asSequence().flatMap { l -> r.findAccessibilityNodeInfosByText(l).orEmpty().asSequence() } }
+            ?.firstOrNull { n -> RESTART_LABELS.any { n.text?.toString().equals(it, ignoreCase = true) } }
             ?.let { n -> generateSequence(n) { it.parent }.take(5).firstOrNull { it.isFocusable } }
         if (entry != null && entry.performAction(AccessibilityNodeInfo.ACTION_FOCUS)) {
-            Toast.makeText(this, "OK drücken zum Neustarten", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, str(R.string.restart_press_ok), Toast.LENGTH_LONG).show()
             return
         }
         if (SystemClock.elapsedRealtime() < restartDeadline) handler.postDelayed(restartStep, 400)
@@ -273,7 +273,8 @@ class HomeWatcherService : AccessibilityService() {
 
         /** Einträge, die nur im Einstellungs-Tab der Amazon-Startseite stehen. */
         private val SETTINGS_MARKERS = listOf("Mein Fire TV", "Einstellungen durchsuchen", "My Fire TV")
-        private const val RESTART_LABEL = "Neu starten"
+        /** „Neu starten“ in Amazons Einstellungen – je nach Systemsprache. */
+        private val RESTART_LABELS = listOf("Neu starten", "Restart")
 
         @Volatile
         var instance: HomeWatcherService? = null

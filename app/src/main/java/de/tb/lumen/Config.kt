@@ -44,5 +44,11 @@ class ConfigReceiver : BroadcastReceiver() {
         edit.apply()
         // Kalender beim nächsten Blick sofort neu laden.
         Calendar.invalidate(context)
+        // Sprache: --es language en|de|system (wirkt beim nächsten Aufbau des Bildschirms).
+        intent.getStringExtra("language")?.let { tag ->
+            val choice = L10n.Choice.entries.firstOrNull { it.tag == tag.lowercase() } ?: L10n.Choice.System
+            L10n.setChoice(context, choice)
+            Log.i("Lumen", "Config: language $choice")
+        }
     }
 }

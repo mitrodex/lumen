@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,7 +64,7 @@ fun ForecastCard(w: WeatherNow, hours: List<HourForecast>) {
             .glass(shape, LocalGlass.current)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
-        Caption("${w.place} · nächste Stunden", Modifier.padding(start = 2.dp, bottom = 8.dp))
+        Caption(str(R.string.wx_next_hours, w.place), Modifier.padding(start = 2.dp, bottom = 8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             hours.forEach { h ->
                 Column(Modifier.width(42.dp), horizontalAlignment = Alignment.CenterHorizontally) {

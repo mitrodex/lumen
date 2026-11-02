@@ -1,5 +1,9 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.L10n
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -95,7 +99,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 internal val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-internal val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM", Locale.GERMAN)
+internal val dateFormat: DateTimeFormatter get() = DateTimeFormatter.ofPattern(str(R.string.date_pattern), L10n.locale)
 
 internal fun formatTime(ms: Long): String = timeFormat.format(Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()))
 internal fun formatDate(ms: Long): String = dateFormat.format(Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()))
@@ -441,10 +445,10 @@ private const val LONG_PRESS_MS = 700L
 
 internal fun greeting(ms: Long): String =
     when (Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()).hour) {
-        in 5..10 -> "Guten Morgen"
-        in 11..16 -> "Guten Tag"
-        in 17..21 -> "Guten Abend"
-        else -> "Gute Nacht"
+        in 5..10 -> str(R.string.greeting_morning)
+        in 11..16 -> str(R.string.greeting_day)
+        in 17..21 -> str(R.string.greeting_evening)
+        else -> str(R.string.greeting_night)
     }
 
 @Composable
@@ -467,7 +471,7 @@ private fun ContinueWidget(app: AppEntry, model: LauncherModel, modifier: Modifi
     ) {
         // Radien konzentrisch: Widget 28 = Abstand 14 + Bild 14.
         Column(Modifier.padding(14.dp)) {
-            Caption("Weiterschauen", Modifier.padding(start = 6.dp, top = 2.dp, bottom = 10.dp))
+            Caption(str(R.string.continue_watching), Modifier.padding(start = 6.dp, top = 2.dp, bottom = 10.dp))
             Box(
                 Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center,

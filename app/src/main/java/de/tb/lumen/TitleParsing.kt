@@ -12,14 +12,14 @@ import java.util.Locale
 fun normTitle(s: String): String = Normalizer.normalize(s, Normalizer.Form.NFD)
     .replace(Regex("\\p{M}"), "").lowercase(Locale.ROOT).replace(Regex("[^\\p{L}\\p{N}]+"), " ").trim()
 
-/** Staffel, Folge und Folgentitel aus einem Untertitel wie „S8:F9 Titel“. */
+/** Staffel, Folge und Folgentitel aus einem Untertitel wie „S8:F9 Titel“ ([title] leer, wenn keiner dasteht). */
 data class NumberedEpisode(val season: Int, val episode: Int, val title: String)
 
 /** „S8:F9 Titel“, „S8 E9 – Titel“, „Staffel 8, Folge 9: Titel“ (Disney+ & Co.); sonst null. */
 fun parseNumberedEpisode(subtitle: String): NumberedEpisode? {
     val m = EPISODE.find(subtitle) ?: return null
     val (s, e, rest) = m.destructured
-    return NumberedEpisode(s.toInt(), e.toInt(), rest.trim().ifBlank { "Folge $e" })
+    return NumberedEpisode(s.toInt(), e.toInt(), rest.trim())
 }
 
 private val EPISODE = Regex(

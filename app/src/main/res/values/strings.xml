@@ -1,7 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    English texts (default). German: values-de/strings.xml. Add a language: copy this file to
+    values-xx/strings.xml (xx = language code, e.g. fr, es) and translate the texts.
+-->
 <resources>
-    <string name="app_name">Lumen</string>
+    <string name="app_name" translatable="false">Lumen</string>
     <string name="service_name">Lumen Home</string>
-    <string name="media_watcher_name">Lumen Weiterschauen</string>
-    <string name="service_description">Öffnet Lumen, wenn die Home-Taste gedrückt wird.</string>
+    <string name="media_watcher_name">Lumen Continue watching</string>
+    <string name="service_description">Opens Lumen when the Home button is pressed.</string>
+
+    <!-- Top bar -->
+    <string name="tab_home">Home</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_search">Search</string>
+
+    <!-- Home screen -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_day">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Good night</string>
+    <!-- java.time pattern for the date under the clock -->
+    <string name="date_pattern">EEEE, MMMM d</string>
+    <string name="continue_watching">Continue watching</string>
+    <string name="continue_watching_app">Continue watching · %1$s</string>
+    <string name="episode_label">S%1$d E%2$d</string>
+    <string name="season_n">Season %1$d</string>
+    <string name="episode_n">Episode %1$d</string>
+
+    <!-- Week calendar -->
+    <string name="cal_this_week">This week</string>
+    <string name="cal_next_week">Next week</string>
+    <string name="cal_in_weeks">In %1$d weeks</string>
+    <string name="cal_not_connected">No calendar connected yet</string>
+    <string name="cal_all_day">all-day</string>
+    <string name="cal_continues">cont.</string>
+
+    <!-- Screensaver -->
+    <string name="dream_upcoming">UPCOMING</string>
+    <string name="when_now">Now</string>
+    <string name="when_today">Today</string>
+    <string name="when_tomorrow">Tomorrow</string>
+    <!-- weekday + day of month for events more than a week away, e.g. "Mon 12" -->
+    <string name="when_weekday_date">%1$s %2$d</string>
+
+    <!-- Apps and search -->
+    <string name="apps_results">%1$d results</string>
+    <string name="apps_all">All apps</string>
+    <string name="apps_favorite_hint">⏯ Play/Pause: add/remove favorite</string>
+    <string name="search_press_ok">Press OK to type</string>
+    <string name="search_apps">Search apps</string>
+
+    <!-- On-screen keyboard: one row of letters each -->
+    <string name="kb_row1">qwertyuiop</string>
+    <string name="kb_row2">asdfghjkl</string>
+    <string name="kb_row3">zxcvbnm</string>
+    <string name="key_space">Space</string>
+    <string name="key_done">Done</string>
+
+    <!-- Weather -->
+    <string name="wx_sunny">Sunny</string>
+    <string name="wx_clear">Clear</string>
+    <string name="wx_mostly_sunny">Mostly sunny</string>
+    <string name="wx_mostly_clear">Mostly clear</string>
+    <string name="wx_partly_cloudy">Partly cloudy</string>
+    <string name="wx_overcast">Overcast</string>
+    <string name="wx_fog">Fog</string>
+    <string name="wx_drizzle">Drizzle</string>
+    <string name="wx_rain">Rain</string>
+    <string name="wx_snow">Snow</string>
+    <string name="wx_showers">Rain showers</string>
+    <string name="wx_snow_showers">Snow showers</string>
+    <string name="wx_thunder">Thunderstorm</string>
+    <string name="wx_next_hours">%1$s · next hours</string>
+
+    <!-- Control center -->
+    <string name="cc_wifi">Wi-Fi</string>
+    <string name="cc_bluetooth">Bluetooth</string>
+    <string name="cc_on">On</string>
+    <string name="cc_off">Off</string>
+    <string name="cc_connected">Connected</string>
+    <string name="cc_pair">Pair</string>
+    <string name="cc_sounds">Sounds</string>
+    <string name="cc_dark">Dark</string>
+    <string name="cc_rest">Rest</string>
+    <string name="cc_sleep">Sleep</string>
+    <string name="cc_sleep_needs_service">Sleep needs the Lumen service</string>
+    <string name="cc_restart">Restart</string>
+    <string name="cc_again">Again</string>
+    <string name="cc_fire_tv" translatable="false">Fire TV</string>
+    <string name="cc_restart_needs_service">Restart needs the Lumen service</string>
+    <string name="cc_settings">Settings</string>
+    <string name="cc_settings_sub">Appearance, Wi-Fi, Bluetooth …</string>
+    <string name="cc_volume">Volume</string>
+    <string name="cc_volume_tv">The TV controls the volume</string>
+    <string name="net_ethernet" translatable="false">Ethernet</string>
+    <string name="restart_press_ok">Press OK to restart</string>
+
+    <!-- Bluetooth / Wi-Fi status -->
+    <string name="bt_searching">Searching … put your headphones in pairing mode</string>
+    <string name="bt_search_failed">Search not possible</string>
+    <string name="bt_pairing">Pairing %1$s …</string>
+    <string name="bt_pair_failed">Pairing failed</string>
+    <string name="bt_profile_not_ready">Audio profile not ready</string>
+    <string name="bt_connecting">Connecting %1$s …</string>
+    <string name="bt_disconnecting">Disconnecting %1$s …</string>
+    <string name="bt_failed">That didn\'t work – please use the Fire TV settings</string>
+    <string name="wifi_add_failed">Couldn\'t add the network</string>
+    <string name="wifi_connecting">Connecting to %1$s …</string>
+    <string name="wifi_connect_failed">Connecting failed</string>
+
+    <!-- Settings -->
+    <string name="cat_appearance">Appearance</string>
+    <string name="cat_screensaver">Screensaver</string>
+    <string name="cat_weather">Weather</string>
+    <string name="cat_system">System</string>
+    <string name="set_missing_permission">System permission missing – some options only work after: adb shell pm grant de.tb.lumen android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="set_dark_mode">Dark mode</string>
+    <string name="set_auto">Automatic</string>
+    <string name="set_always">Always</string>
+    <string name="set_never">Never</string>
+    <string name="set_dark_from">Dark from</string>
+    <string name="set_light_from">Light from</string>
+    <string name="set_motion">Motion</string>
+    <string name="set_animated_bg">Moving background</string>
+    <string name="set_animated_bg_sub">Colors drift slowly – costs a little performance</string>
+    <string name="set_animations">Animations</string>
+    <string name="set_animations_sub">Applies to the whole system</string>
+    <string name="set_anim_normal">Normal</string>
+    <string name="set_anim_fast">Fast</string>
+    <string name="set_minutes">%1$d min</string>
+    <string name="set_hours">%1$d h</string>
+    <string name="set_lumen_screensaver">Lumen screensaver</string>
+    <string name="set_ss_lumen_sub">Gradients with clock and weather</string>
+    <string name="set_ss_amazon_sub">Amazon photos</string>
+    <string name="set_ss_start">Start after</string>
+    <string name="set_sleep_after">Sleep after</string>
+    <string name="set_sleep_sub">TV signal off</string>
+    <string name="set_scan_networks">Search networks</string>
+    <string name="set_found">%1$d found</string>
+    <string name="set_networks">Networks</string>
+    <string name="set_connected_check">Connected ✓</string>
+    <string name="set_saved">Saved</string>
+    <string name="set_secured">Secured</string>
+    <string name="set_open">Open</string>
+    <string name="set_signal">Signal %1$s</string>
+    <string name="set_password_for">Password for %1$s</string>
+    <string name="set_bt_search">Search headphones &amp; speakers</string>
+    <string name="set_bt_searching">Searching …</string>
+    <string name="set_bt_hint">Put the device in pairing mode first</string>
+    <string name="set_audio_devices">Audio devices</string>
+    <string name="set_no_audio">No audio devices yet – search above.</string>
+    <string name="set_connect">Connect</string>
+    <string name="set_press_ok_disconnect">Press OK to disconnect</string>
+    <string name="set_current_place">Current place</string>
+    <string name="set_not_set">Not set</string>
+    <string name="set_change_place">Change place</string>
+    <string name="set_enter_city">Enter a city, then OK</string>
+    <string name="set_searching_city">Searching %1$s …</string>
+    <string name="set_saved_place">Saved: %1$s</string>
+    <string name="set_place_not_found">Place not found</string>
+    <string name="set_self_heal">Self-healing</string>
+    <string name="set_active">Active</string>
+    <string name="set_self_heal_sub">Switches Lumen\'s services back on after updates and restarts</string>
+    <string name="set_adb">ADB debugging</string>
+    <string name="set_adb_armed">Press again: the connection to the PC will be cut</string>
+    <string name="set_adb_sub">For updates and remote maintenance from a PC</string>
+    <string name="set_all_fire">All Fire TV settings</string>
+    <string name="set_all_fire_sub">Resolution, sounds, account, parental controls …</string>
+    <string name="set_version">Version %1$s</string>
+    <string name="set_language">Language</string>
+    <string name="lang_system">System</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string name="lang_de" translatable="false">Deutsch</string>
 </resources>

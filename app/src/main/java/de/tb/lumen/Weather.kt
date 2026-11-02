@@ -128,19 +128,19 @@ object Weather {
         }.take(HOURS)
     }.getOrDefault(emptyList())
 
-    /** WMO-Wettercode -> deutsche Kurzbeschreibung. */
+    /** WMO-Wettercode -> Kurzbeschreibung in der Sprache der Oberfläche. */
     fun describe(code: Int, isDay: Boolean): String = when (code) {
-        0 -> if (isDay) "Sonnig" else "Klar"
-        1 -> if (isDay) "Heiter" else "Überwiegend klar"
-        2 -> "Teils bewölkt"
-        3 -> "Bedeckt"
-        45, 48 -> "Nebel"
-        51, 53, 55, 56, 57 -> "Nieselregen"
-        61, 63, 65, 66, 67 -> "Regen"
-        71, 73, 75, 77 -> "Schnee"
-        80, 81, 82 -> "Regenschauer"
-        85, 86 -> "Schneeschauer"
-        95, 96, 99 -> "Gewitter"
+        0 -> str(if (isDay) R.string.wx_sunny else R.string.wx_clear)
+        1 -> str(if (isDay) R.string.wx_mostly_sunny else R.string.wx_mostly_clear)
+        2 -> str(R.string.wx_partly_cloudy)
+        3 -> str(R.string.wx_overcast)
+        45, 48 -> str(R.string.wx_fog)
+        51, 53, 55, 56, 57 -> str(R.string.wx_drizzle)
+        61, 63, 65, 66, 67 -> str(R.string.wx_rain)
+        71, 73, 75, 77 -> str(R.string.wx_snow)
+        80, 81, 82 -> str(R.string.wx_showers)
+        85, 86 -> str(R.string.wx_snow_showers)
+        95, 96, 99 -> str(R.string.wx_thunder)
         else -> "—"
     }
 

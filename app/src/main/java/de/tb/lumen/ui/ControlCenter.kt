@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import android.content.Context
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
@@ -109,33 +112,33 @@ fun ControlCenter(model: LauncherModel, onClose: () -> Unit, onOpenSettings: (Ca
             val toggleRow = Modifier.fillMaxWidth().glass(ModuleShape, glass).padding(vertical = 8.dp)
             Row(toggleRow, horizontalArrangement = Arrangement.SpaceEvenly) {
                 CircleToggle(
-                    LumenIcons.Wifi, "WLAN", wifi ?: "Aus", active = wifi != null, activeColor = SystemBlue,
+                    LumenIcons.Wifi, str(R.string.cc_wifi), wifi ?: str(R.string.cc_off), active = wifi != null, activeColor = SystemBlue,
                     modifier = Modifier.focusRequester(firstFocus),
                 ) { onOpenSettings(Category.Wifi) }
                 CircleToggle(
-                    LumenIcons.Bluetooth, "Bluetooth", btAudio?.let { "Verbunden" } ?: "Koppeln",
+                    LumenIcons.Bluetooth, str(R.string.cc_bluetooth), btAudio?.let { str(R.string.cc_connected) } ?: str(R.string.cc_pair),
                     active = btAudio != null, activeColor = SystemBlue,
                 ) { onOpenSettings(Category.Bluetooth) }
                 CircleToggle(
-                    LumenIcons.Volume, "Töne", if (model.sounds) "Ein" else "Aus",
+                    LumenIcons.Volume, str(R.string.cc_sounds), if (model.sounds) str(R.string.cc_on) else str(R.string.cc_off),
                     active = model.sounds, activeColor = Color.White,
                 ) { model.toggleSounds() }
             }
             Row(toggleRow, horizontalArrangement = Arrangement.SpaceEvenly) {
                 CircleToggle(
-                    LumenIcons.Appearance, "Dunkel", if (model.dark) "Ein" else "Aus",
+                    LumenIcons.Appearance, str(R.string.cc_dark), if (model.dark) str(R.string.cc_on) else str(R.string.cc_off),
                     active = model.dark, activeColor = Color.White,
                 ) { model.toggleDark() }
-                CircleToggle(LumenIcons.Moon, "Ruhe", "Schlafen", active = false, activeColor = Color.White) {
+                CircleToggle(LumenIcons.Moon, str(R.string.cc_rest), str(R.string.cc_sleep), active = false, activeColor = Color.White) {
                     onClose()
                     if (!HomeWatcherService.sleep()) {
-                        Toast.makeText(context, "Ruhezustand braucht den Lumen-Dienst", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, str(R.string.cc_sleep_needs_service), Toast.LENGTH_SHORT).show()
                     }
                 }
                 // Zweistufig gegen versehentliches Auslösen: 1. Druck = scharf (rot), 2. Druck öffnet
                 // „Mein Fire TV“ mit Fokus auf „Neu starten“ – dort genügt OK.
                 CircleToggle(
-                    LumenIcons.Restart, "Neustart", if (restartArmed) "Nochmal" else "Fire TV",
+                    LumenIcons.Restart, str(R.string.cc_restart), if (restartArmed) str(R.string.cc_again) else str(R.string.cc_fire_tv),
                     active = restartArmed, activeColor = SystemRed,
                 ) {
                     if (!restartArmed) {
@@ -144,7 +147,7 @@ fun ControlCenter(model: LauncherModel, onClose: () -> Unit, onOpenSettings: (Ca
                         onClose()
                         val service = HomeWatcherService.instance
                         if (service != null) service.restartDevice()
-                        else Toast.makeText(context, "Neustart braucht den Lumen-Dienst", Toast.LENGTH_SHORT).show()
+                        else Toast.makeText(context, str(R.string.cc_restart_needs_service), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -160,7 +163,7 @@ fun ControlCenter(model: LauncherModel, onClose: () -> Unit, onOpenSettings: (Ca
 
             Spacer(Modifier.weight(1f))
 
-            ModuleButton(LumenIcons.Settings, "Einstellungen", "Darstellung, WLAN, Bluetooth …") {
+            ModuleButton(LumenIcons.Settings, str(R.string.cc_settings), str(R.string.cc_settings_sub)) {
                 onOpenSettings(Category.Appearance)
             }
         }
@@ -221,7 +224,7 @@ private fun VolumeModule() {
         ) {
             Image(LumenIcons.Volume, null, Modifier.size(22.dp), colorFilter = ColorFilter.tint(Color.White))
             Spacer(Modifier.width(14.dp))
-            LText("Lautstärke regelt der Fernseher", 15.sp, weight = FontWeight.Medium, alpha = 0.8f)
+            LText(str(R.string.cc_volume_tv), 15.sp, weight = FontWeight.Medium, alpha = 0.8f)
         }
         return
     }
@@ -238,7 +241,7 @@ private fun VolumeModule() {
     }
 
     Column {
-        Caption("Lautstärke", Modifier.padding(start = 14.dp, bottom = 8.dp))
+        Caption(str(R.string.cc_volume), Modifier.padding(start = 14.dp, bottom = 8.dp))
         Box(
             Modifier
                 .fillMaxWidth()
@@ -299,8 +302,8 @@ private fun networkStatus(context: Context): String? {
     val cm = context.getSystemService(ConnectivityManager::class.java)
     val caps = cm?.getNetworkCapabilities(cm.activeNetwork) ?: return null
     return when {
-        caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "Ethernet"
-        else -> "Verbunden"
+        caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> str(R.string.net_ethernet)
+        else -> str(R.string.cc_connected)
     }
 }
 

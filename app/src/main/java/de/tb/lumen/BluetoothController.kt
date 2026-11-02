@@ -83,7 +83,7 @@ class BluetoothController(private val context: Context) {
         val a = adapter ?: return
         found.clear()
         scanning = runCatching { a.cancelDiscovery(); a.startDiscovery() }.getOrDefault(false)
-        status = if (scanning) "Suche Geräte … Kopfhörer in den Kopplungsmodus versetzen" else "Suche nicht möglich"
+        status = str(if (scanning) R.string.bt_searching else R.string.bt_search_failed)
         update()
     }
 
@@ -111,25 +111,25 @@ class BluetoothController(private val context: Context) {
             else -> {
                 runCatching { adapter?.cancelDiscovery() }
                 val ok = adapter?.getRemoteDevice(dev.address)?.createBond() == true
-                status = if (ok) "Koppele ${dev.name} …" else "Koppeln fehlgeschlagen"
+                status = if (ok) str(R.string.bt_pairing, dev.name) else str(R.string.bt_pair_failed)
             }
         }
     }
 
     // connect/disconnect sind in Android 9 versteckte A2DP-APIs – per Reflection.
-    private fun connect(address: String) = callA2dp("connect", address, "Verbinde")
-    private fun disconnect(address: String) = callA2dp("disconnect", address, "Trenne")
+    private fun connect(address: String) = callA2dp("connect", address, R.string.bt_connecting)
+    private fun disconnect(address: String) = callA2dp("disconnect", address, R.string.bt_disconnecting)
 
-    private fun callA2dp(method: String, address: String, verb: String) {
+    private fun callA2dp(method: String, address: String, @androidx.annotation.StringRes progress: Int) {
         val proxy = a2dp
         val device = adapter?.getRemoteDevice(address)
         if (proxy == null || device == null) {
-            status = "Audio-Profil nicht bereit"
+            status = str(R.string.bt_profile_not_ready)
             return
         }
         val ok = runCatching {
             proxy.javaClass.getMethod(method, BluetoothDevice::class.java).invoke(proxy, device) as Boolean
         }.getOrDefault(false)
-        status = if (ok) "$verb ${device.name} …" else "$verb fehlgeschlagen – bitte in den Fire-Einstellungen"
+        status = if (ok) str(progress, device.name.orEmpty()) else str(R.string.bt_failed)
     }
 }

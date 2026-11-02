@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +44,7 @@ fun GlassKeyboard(onChar: (Char) -> Unit, onDelete: () -> Unit, onDone: () -> Un
     val rows = if (numbers) {
         listOf("1234567890", "-/:;()&@\".", ",?!'#+*=_%")
     } else {
-        listOf("qwertzuiopü", "asdfghjklöä", "yxcvbnmß")
+        listOf(str(R.string.kb_row1), str(R.string.kb_row2), str(R.string.kb_row3))
     }
     val shape = RoundedCornerShape(28.dp)
     Column(
@@ -64,9 +67,9 @@ fun GlassKeyboard(onChar: (Char) -> Unit, onDelete: () -> Unit, onDone: () -> Un
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Key(if (numbers) "ABC" else "123", width = 84.dp, small = true) { numbers = !numbers }
-            Key("Leerzeichen", width = 260.dp, small = true) { onChar(' ') }
+            Key(str(R.string.key_space), width = 260.dp, small = true) { onChar(' ') }
             IconKey(LumenIcons.Backspace, 84.dp, onDelete)
-            Key("Fertig", width = 110.dp, small = true, accent = true, onClick = onDone)
+            Key(str(R.string.key_done), width = 110.dp, small = true, accent = true, onClick = onDone)
         }
     }
     LaunchedEffect(Unit) { runCatching { first.requestFocus() } }

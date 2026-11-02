@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -82,7 +85,7 @@ fun HistoryPopup(
             .padding(14.dp)
             .focusGroup(),
     ) {
-        Caption("Weiterschauen · ${app.label}", Modifier.padding(start = 6.dp, top = 2.dp, bottom = 10.dp))
+        Caption(str(R.string.continue_watching_app, app.label), Modifier.padding(start = 6.dp, top = 2.dp, bottom = 10.dp))
         entries.forEachIndexed { i, entry ->
             if (i > 0) Spacer(Modifier.height(4.dp))
             val art = entry.art

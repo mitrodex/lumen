@@ -1,5 +1,8 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -89,9 +92,9 @@ fun AppsScreen(model: LauncherModel, search: Boolean) {
             Spacer(Modifier.height(18.dp))
         }
         Row(Modifier.padding(start = 10.dp, bottom = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Caption(if (search && q.isNotEmpty()) "${apps.size} Treffer" else "Alle Apps")
+            Caption(if (search && q.isNotEmpty()) str(R.string.apps_results, apps.size) else str(R.string.apps_all))
             Spacer(Modifier.width(14.dp))
-            LText("⏯ Play/Pause: Favorit an/aus", 12.sp, alpha = 0.55f)
+            LText(str(R.string.apps_favorite_hint), 12.sp, alpha = 0.55f)
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(5),
@@ -124,7 +127,7 @@ private fun SearchField(query: String, modifier: Modifier, onOpen: () -> Unit) {
             Image(LumenIcons.Search, null, Modifier.size(22.dp), colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.8f)))
             Spacer(Modifier.width(12.dp))
             if (query.isEmpty()) {
-                LText(if (focused) "OK drücken zum Tippen" else "Apps durchsuchen", 19.sp, alpha = 0.55f)
+                LText(if (focused) str(R.string.search_press_ok) else str(R.string.search_apps), 19.sp, alpha = 0.55f)
             } else {
                 LText(query, 19.sp, weight = FontWeight.Medium)
                 // Schreibmarke

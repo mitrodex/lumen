@@ -17,7 +17,7 @@ class TitleParsingTest {
         assertEquals(NumberedEpisode(8, 9, "Ein Titel"), parseNumberedEpisode("S8:F9 Ein Titel"))
         assertEquals(NumberedEpisode(2, 13, "Pilot"), parseNumberedEpisode("S2 E13 – Pilot"))
         assertEquals(NumberedEpisode(1, 4, "Der Anfang"), parseNumberedEpisode("Staffel 1, Folge 4: Der Anfang"))
-        assertEquals(NumberedEpisode(3, 1, "Folge 1"), parseNumberedEpisode("Season 3 Episode 1"))
+        assertEquals(NumberedEpisode(3, 1, ""), parseNumberedEpisode("Season 3 Episode 1"))
     }
 
     @Test

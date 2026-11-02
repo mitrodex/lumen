@@ -1,5 +1,9 @@
 package de.tb.lumen.ui
 
+import de.tb.lumen.L10n
+import de.tb.lumen.R
+import de.tb.lumen.str
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -73,13 +77,15 @@ import de.tb.lumen.WifiNetwork
 import kotlinx.coroutines.launch
 
 /** Seiten der Lumen-Einstellungen; das Kontrollzentrum springt direkt zu WLAN bzw. Bluetooth. */
-enum class Category(val title: String, val icon: () -> ImageVector) {
-    Appearance("Darstellung", { LumenIcons.Appearance }),
-    Screensaver("Bildschirmschoner", { LumenIcons.Moon }),
-    Wifi("WLAN", { LumenIcons.Wifi }),
-    Bluetooth("Bluetooth", { LumenIcons.Bluetooth }),
-    WeatherCat("Wetter", { LumenIcons.Sun }),
-    System("System", { LumenIcons.Settings }),
+enum class Category(@androidx.annotation.StringRes private val titleRes: Int, val icon: () -> ImageVector) {
+    Appearance(R.string.cat_appearance, { LumenIcons.Appearance }),
+    Screensaver(R.string.cat_screensaver, { LumenIcons.Moon }),
+    Wifi(R.string.cc_wifi, { LumenIcons.Wifi }),
+    Bluetooth(R.string.cc_bluetooth, { LumenIcons.Bluetooth }),
+    WeatherCat(R.string.cat_weather, { LumenIcons.Sun }),
+    System(R.string.cat_system, { LumenIcons.Settings });
+
+    val title: String get() = str(titleRes)
 }
 
 private val PanelShape = RoundedCornerShape(32.dp)
@@ -97,7 +103,7 @@ fun SettingsScreen(model: LauncherModel, start: Category = Category.Appearance) 
 
     Row(Modifier.fillMaxSize()) {
         Column(Modifier.width(300.dp).fillMaxHeight()) {
-            LText("Einstellungen", 34.sp, Modifier.padding(start = 8.dp, bottom = 18.dp), FontWeight.SemiBold, shadow = true)
+            LText(str(R.string.cc_settings), 34.sp, Modifier.padding(start = 8.dp, bottom = 18.dp), FontWeight.SemiBold, shadow = true)
             Category.entries.forEach { c ->
                 CategoryItem(
                     c, selected = c == category,
@@ -120,7 +126,7 @@ fun SettingsScreen(model: LauncherModel, start: Category = Category.Appearance) 
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (!canWrite) {
-                    item { Notice("Systemberechtigung fehlt – einige Optionen wirken erst nach: adb shell pm grant de.tb.lumen android.permission.WRITE_SECURE_SETTINGS") }
+                    item { Notice(str(R.string.set_missing_permission)) }
                 }
                 when (category) {
                     Category.Appearance -> appearanceRows(model)
@@ -246,44 +252,44 @@ private fun <T> List<T>.after(current: T): T = this[(indexOf(current) + 1).mod(s
 // --- Darstellung --------------------------------------------------------------------------
 
 private fun LazyListScope.appearanceRows(model: LauncherModel) {
-    header("Dunkelmodus")
+    header(str(R.string.set_dark_mode))
     item {
         val ctx = LocalContext.current
         val p = remember { Appearance.prefs(ctx) }
         var v by remember { mutableIntStateOf(0) }
         @Suppress("UNUSED_EXPRESSION") v
         val mode = Appearance.mode(p)
-        val label = mapOf(Appearance.Mode.Auto to "Automatisch", Appearance.Mode.Always to "Immer", Appearance.Mode.Never to "Nie")
+        val label = mapOf(Appearance.Mode.Auto to str(R.string.set_auto), Appearance.Mode.Always to str(R.string.set_always), Appearance.Mode.Never to str(R.string.set_never))
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SettingRow("Dunkelmodus", label[mode]) {
+            SettingRow(str(R.string.set_dark_mode), label[mode]) {
                 Appearance.setMode(p, Appearance.Mode.entries.toList().after(mode)); v++; model.tick()
             }
             if (mode == Appearance.Mode.Auto) {
                 val from = Appearance.darkFrom(p)
                 val until = Appearance.darkUntil(p)
-                SettingRow("Dunkel ab", "‹ %02d:00 ›".format(from), onKey = stepKeys { Appearance.setHours(p, from + it, until); v++; model.tick() }) {
+                SettingRow(str(R.string.set_dark_from), "‹ %02d:00 ›".format(from), onKey = stepKeys { Appearance.setHours(p, from + it, until); v++; model.tick() }) {
                     Appearance.setHours(p, from + 1, until); v++; model.tick()
                 }
-                SettingRow("Hell ab", "‹ %02d:00 ›".format(until), onKey = stepKeys { Appearance.setHours(p, from, until + it); v++; model.tick() }) {
+                SettingRow(str(R.string.set_light_from), "‹ %02d:00 ›".format(until), onKey = stepKeys { Appearance.setHours(p, from, until + it); v++; model.tick() }) {
                     Appearance.setHours(p, from, until + 1); v++; model.tick()
                 }
             }
         }
     }
-    header("Bewegung")
+    header(str(R.string.set_motion))
     item {
         SettingRow(
-            "Bewegter Hintergrund",
+            str(R.string.set_animated_bg),
             toggle = model.animatedBackground,
-            subtitle = "Farbflächen wandern langsam – kostet etwas Leistung",
+            subtitle = str(R.string.set_animated_bg_sub),
         ) { model.toggleAnimatedBackground() }
     }
     item {
         val ctx = LocalContext.current
         var scale by remember { mutableFloatStateOf(SystemSettings.animationScale(ctx)) }
-        val options = listOf(1f to "Normal", 0.5f to "Schnell", 0f to "Aus")
+        val options = listOf(1f to str(R.string.set_anim_normal), 0.5f to str(R.string.set_anim_fast), 0f to str(R.string.cc_off))
         val current = options.minBy { kotlin.math.abs(it.first - scale) }
-        SettingRow("Animationen", current.second, subtitle = "Gilt für das ganze System") {
+        SettingRow(str(R.string.set_animations), current.second, subtitle = str(R.string.set_animations_sub)) {
             val next = options.after(current)
             if (SystemSettings.setAnimationScale(ctx, next.first)) scale = next.first
         }
@@ -301,19 +307,19 @@ private fun LazyListScope.screensaverRows() {
         val delays = listOf(5, 10, 15, 30)
         val sleeps = listOf(20, 60, 120, 240, -1)
         fun sleepLabel(m: Int) = when {
-            m < 0 -> "Nie"
-            m < 60 -> "$m Min."
-            else -> "${m / 60} Std."
+            m < 0 -> str(R.string.set_never)
+            m < 60 -> str(R.string.set_minutes, m)
+            else -> str(R.string.set_hours, m / 60)
         }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SettingRow("Lumen-Bildschirmschoner", toggle = lumen, subtitle = if (lumen) "Farbverläufe mit Uhr und Wetter" else "Amazon-Fotos") {
+            SettingRow(str(R.string.set_lumen_screensaver), toggle = lumen, subtitle = if (lumen) str(R.string.set_ss_lumen_sub) else str(R.string.set_ss_amazon_sub)) {
                 if (SystemSettings.setLumenScreensaver(ctx, !lumen)) lumen = !lumen
             }
-            SettingRow("Starten nach", "$delay Min.") {
+            SettingRow(str(R.string.set_ss_start), str(R.string.set_minutes, delay)) {
                 val next = delays.firstOrNull { it > delay } ?: delays.first()
                 if (SystemSettings.setScreensaverDelayMin(ctx, next)) delay = next
             }
-            SettingRow("Ruhezustand nach", sleepLabel(sleep), subtitle = "Fernseher-Signal aus") {
+            SettingRow(str(R.string.set_sleep_after), sleepLabel(sleep), subtitle = str(R.string.set_sleep_sub)) {
                 val next = sleeps.getOrNull(sleeps.indexOf(sleep) + 1) ?: sleeps.first()
                 if (SystemSettings.setSleepMin(ctx, next)) sleep = next
             }
@@ -334,16 +340,16 @@ private fun WifiPane() {
     var expanded by remember { mutableStateOf<String?>(null) }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        SettingRow("Netzwerke suchen", wifi.status ?: "${wifi.networks.size} gefunden") { wifi.scan() }
-        Caption("Netzwerke", Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
+        SettingRow(str(R.string.set_scan_networks), wifi.status ?: str(R.string.set_found, wifi.networks.size)) { wifi.scan() }
+        Caption(str(R.string.set_networks), Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
         wifi.networks.forEach { net ->
             val value = when {
-                net.connected -> "Verbunden ✓"
-                net.saved -> "Gespeichert"
-                net.secured -> "Gesichert"
-                else -> "Offen"
+                net.connected -> str(R.string.set_connected_check)
+                net.saved -> str(R.string.set_saved)
+                net.secured -> str(R.string.set_secured)
+                else -> str(R.string.set_open)
             }
-            SettingRow(net.ssid, value, subtitle = "Signal " + "●".repeat(net.level + 1) + "○".repeat(3 - net.level)) {
+            SettingRow(net.ssid, value, subtitle = str(R.string.set_signal, "●".repeat(net.level + 1) + "○".repeat(3 - net.level))) {
                 when {
                     net.connected -> Unit
                     net.saved || !net.secured -> wifi.connect(net, null)
@@ -359,7 +365,7 @@ private fun WifiPane() {
 private fun PasswordRow(net: WifiNetwork, onSubmit: (String) -> Unit) {
     var pw by remember { mutableStateOf("") }
     val focus = remember { FocusRequester() }
-    TextRow("Passwort für ${net.ssid}", pw, { pw = it }, password = true, modifier = Modifier.focusRequester(focus)) { onSubmit(pw) }
+    TextRow(str(R.string.set_password_for, net.ssid), pw, { pw = it }, password = true, modifier = Modifier.focusRequester(focus)) { onSubmit(pw) }
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
 }
 
@@ -416,21 +422,21 @@ private fun BluetoothPane() {
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SettingRow(
-            "Kopfhörer & Lautsprecher suchen",
-            if (bt.scanning) "Sucht …" else null,
-            subtitle = bt.status ?: "Gerät vorher in den Kopplungsmodus versetzen",
+            str(R.string.set_bt_search),
+            if (bt.scanning) str(R.string.set_bt_searching) else null,
+            subtitle = bt.status ?: str(R.string.set_bt_hint),
         ) { bt.scan() }
-        Caption("Audio-Geräte", Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
+        Caption(str(R.string.set_audio_devices), Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
         if (bt.devices.isEmpty()) {
-            LText("Noch keine Audio-Geräte – oben suchen.", 15.sp, Modifier.padding(start = 12.dp, top = 6.dp), alpha = 0.6f)
+            LText(str(R.string.set_no_audio), 15.sp, Modifier.padding(start = 12.dp, top = 6.dp), alpha = 0.6f)
         }
         bt.devices.forEach { d ->
             val value = when {
-                d.connected -> "Verbunden ✓"
-                d.bonded -> "Verbinden"
-                else -> "Koppeln"
+                d.connected -> str(R.string.set_connected_check)
+                d.bonded -> str(R.string.set_connect)
+                else -> str(R.string.cc_pair)
             }
-            SettingRow(d.name, value, subtitle = if (d.connected) "OK drücken zum Trennen" else null) { bt.activate(d) }
+            SettingRow(d.name, value, subtitle = if (d.connected) str(R.string.set_press_ok_disconnect) else null) { bt.activate(d) }
         }
     }
 }
@@ -446,17 +452,17 @@ private fun WeatherPane(model: LauncherModel) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val w = model.weather
         SettingRow(
-            "Aktueller Ort",
-            w?.place ?: "Nicht gesetzt",
+            str(R.string.set_current_place),
+            w?.place ?: str(R.string.set_not_set),
             subtitle = w?.let { "${it.tempC}° · ${Weather.describe(it.code, it.isDay)}" },
         )
-        Caption("Ort ändern", Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
-        TextRow("Stadt eingeben, dann OK", city, { city = it }) {
+        Caption(str(R.string.set_change_place), Modifier.padding(start = 12.dp, top = 10.dp, bottom = 2.dp))
+        TextRow(str(R.string.set_enter_city), city, { city = it }) {
             if (city.isBlank()) return@TextRow
-            msg = "Suche $city …"
+            msg = str(R.string.set_searching_city, city)
             scope.launch {
                 model.setWeatherPlace(city)
-                msg = if (Weather.hasPlace(ctx) && model.weather?.place?.isNotBlank() == true) "Gespeichert: ${model.weather?.place}" else "Ort nicht gefunden"
+                msg = if (Weather.hasPlace(ctx) && model.weather?.place?.isNotBlank() == true) str(R.string.set_saved_place, model.weather?.place.orEmpty()) else str(R.string.set_place_not_found)
             }
         }
         msg?.let { LText(it, 14.sp, Modifier.padding(start = 12.dp, top = 4.dp), alpha = 0.7f) }
@@ -464,6 +470,22 @@ private fun WeatherPane(model: LauncherModel) {
 }
 
 // --- System -------------------------------------------------------------------------------
+
+/** Sprache der Oberfläche: System → English → Deutsch; baut den Bildschirm danach neu auf. */
+@Composable
+private fun LanguageRow() {
+    val ctx = LocalContext.current
+    val choice = L10n.choice(ctx)
+    val label = when (choice) {
+        L10n.Choice.System -> str(R.string.lang_system)
+        L10n.Choice.English -> str(R.string.lang_en)
+        L10n.Choice.German -> str(R.string.lang_de)
+    }
+    SettingRow(str(R.string.set_language), label) {
+        L10n.setChoice(ctx, L10n.Choice.entries.toList().after(choice))
+        (ctx as? android.app.Activity)?.recreate()
+    }
+}
 
 private fun LazyListScope.systemRows() {
     item {
@@ -473,16 +495,16 @@ private fun LazyListScope.systemRows() {
         var adbArmed by remember { mutableStateOf(false) }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SettingRow(
-                "Selbstheilung",
-                if (canWrite) "Aktiv" else "Aus",
-                subtitle = "Schaltet Lumens Dienste nach Updates und Neustarts selbst wieder ein",
+                str(R.string.set_self_heal),
+                if (canWrite) str(R.string.set_active) else str(R.string.cc_off),
+                subtitle = str(R.string.set_self_heal_sub),
             )
             SettingRow(
-                "ADB-Debugging",
+                str(R.string.set_adb),
                 toggle = adb,
                 subtitle = when {
-                    adbArmed -> "Nochmal drücken: Verbindung zum PC wird getrennt"
-                    else -> "Für Updates und Fernwartung vom PC"
+                    adbArmed -> str(R.string.set_adb_armed)
+                    else -> str(R.string.set_adb_sub)
                 },
             ) {
                 if (adb && !adbArmed) {
@@ -492,11 +514,12 @@ private fun LazyListScope.systemRows() {
                     adbArmed = false
                 }
             }
-            SettingRow("Alle Fire-TV-Einstellungen", "›", subtitle = "Auflösung, Töne, Konto, Kindersicherung …") {
+            SettingRow(str(R.string.set_all_fire), "›", subtitle = str(R.string.set_all_fire_sub)) {
                 AppRepository.openFireSettings(ctx)
             }
             val version = remember { ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName }
-            SettingRow("Lumen", "Version $version")
+            LanguageRow()
+            SettingRow(str(R.string.app_name), str(R.string.set_version, version.orEmpty()))
         }
     }
 }

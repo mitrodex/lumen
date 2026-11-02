@@ -99,7 +99,7 @@ private class DreamView(context: Context) : View(context) {
         val line = dp(34f)
         var y = height - dp(56f) - dp(30f) * (0.5f + 0.5f * sin(minute * 1.1f)) - line * (events.size - 1)
         // Block rechts, Inhalt linksbündig: Punkt | Zeit (feste Spalte) | Titel.
-        val head = "NÄCHSTE TERMINE"
+        val head = str(R.string.dream_upcoming)
         val times = events.map { whenText(it, now) }
         val timeCol = times.maxOf { whenPaint.measureText(it) }
         val titleX = dp(16f) + timeCol + dp(12f)
@@ -120,12 +120,12 @@ private class DreamView(context: Context) : View(context) {
         val today = java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
         val start = java.time.Instant.ofEpochMilli(e.start).atZone(zone)
         val day = when (val d = java.time.temporal.ChronoUnit.DAYS.between(today, start.toLocalDate())) {
-            in Long.MIN_VALUE..0L -> if (e.start <= now) "Jetzt" else "Heute"
-            1L -> "Morgen"
-            else -> start.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.GERMAN).removeSuffix(".") +
-                if (d >= 7) " ${start.dayOfMonth}." else ""
+            in Long.MIN_VALUE..0L -> if (e.start <= now) str(R.string.when_now) else str(R.string.when_today)
+            1L -> str(R.string.when_tomorrow)
+            else -> start.dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, L10n.locale).removeSuffix(".")
+                .let { wd -> if (d >= 7) str(R.string.when_weekday_date, wd, start.dayOfMonth) else wd }
         }
-        if (day == "Jetzt" || e.allDay) return day
+        if (e.start <= now || e.allDay) return day
         return "$day ${start.hour}:%02d".format(start.minute)
     }
 
