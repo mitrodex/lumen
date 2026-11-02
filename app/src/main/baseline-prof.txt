@@ -1,0 +1,5 @@
+# Handgeschriebenes Baseline Profile: alle Lumen-Klassen vorab kompilieren.
+# (Ein aufgezeichnetes Profil bräuchte Android 13+ oder Root – der Stick hat Android 9.)
+# Compose & Co. bringen eigene Profile mit; profileinstaller installiert alles beim Sideload.
+HSPLde/tb/lumen/**->**(**)**
+Lde/tb/lumen/**;

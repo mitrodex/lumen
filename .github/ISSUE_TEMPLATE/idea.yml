@@ -1,0 +1,32 @@
+name: 💡 Idea
+description: You have an idea for Lumen? No technical knowledge needed – just describe it.
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! Lumen is written entirely by AI. Your description is the "code" – the clearer it is,
+        the better the result. Write in English or German, whatever is easier for you.
+  - type: textarea
+    id: what
+    attributes:
+      label: What should Lumen do?
+      description: Describe it like you would to a friend. What do you see on the TV, what do you press?
+      placeholder: "When I hold the OK button on a favorite app, I want to …"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would that be nice?
+      description: What annoys you today, or what would be more fun?
+  - type: textarea
+    id: pictures
+    attributes:
+      label: Pictures or examples (optional)
+      description: A photo of your TV, a sketch, a screenshot of another app that does it well – drag it in here.
+  - type: input
+    id: device
+    attributes:
+      label: Your device (optional)
+      placeholder: "Fire TV Stick 4K, Fire OS 7.6"

@@ -1,0 +1,28 @@
+# Build
+.gradle/
+.kotlin/
+build/
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Private – never commit (keys, calendar links, your own paths/IP)
+local.properties
+tv.local.bat
+*.jks
+*.keystore
+.env
+
+# Personal device notes and screenshots (may show private calendar entries)
+/*.png
+packages-enabled.txt
+disabled-packages.txt
+debloat-candidates.md
+
+# Claude Code local state
+.claude/settings.local.json

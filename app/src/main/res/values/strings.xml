@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lumen</string>
+    <string name="service_name">Lumen Home</string>
+    <string name="media_watcher_name">Lumen Weiterschauen</string>
+    <string name="service_description">Öffnet Lumen, wenn die Home-Taste gedrückt wird.</string>
+</resources>

@@ -1,0 +1,43 @@
+name: 🐞 Something is broken
+description: Lumen does something wrong or nothing at all.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      placeholder: "I pressed Home while XYZ was playing and …"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can we see it ourselves?
+      description: Step by step, as exactly as you can.
+      placeholder: |
+        1. Open XYZ
+        2. Play an episode
+        3. Press Home
+  - type: input
+    id: device
+    attributes:
+      label: Device and Fire OS version
+      description: Settings → My Fire TV → About
+      placeholder: "Fire TV Stick (3rd gen), Fire OS 7.7.1.7"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Lumen version
+      description: Shown in Lumen's settings, or the name of the APK you installed.
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional, for the brave)
+      description: "`adb logcat -d | grep -i lumen` – paste the output here."
+      render: text
