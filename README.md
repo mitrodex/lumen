@@ -6,7 +6,7 @@
 ![vibe-coded](https://img.shields.io/badge/code-100%25%20vibe--coded-blueviolet)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-<!-- TODO: add a screenshot (docs/screenshot.png) – use a demo calendar, not your private one -->
+![Lumen on a Fire TV: clock, week calendar and favorite apps on a frosted-glass background](docs/screenshot.png)
 
 Lumen replaces the ad-filled Amazon home screen with a calm, translucent "frosted glass" design:
 your favorite apps, a clock, weather and your week – and a way to jump straight back into the
@@ -86,6 +86,8 @@ adb shell am broadcast -a de.tb.lumen.CONFIG -n de.tb.lumen/.ConfigReceiver \
   should work too – only iCloud is tested so far.
 - **TMDB key** (episode numbers and images): free at [themoviedb.org](https://www.themoviedb.org/settings/api).
 - An empty value (`""`) removes a setting.
+- **Just want to see it?** Use the demo calendars from the screenshot:
+  `https://raw.githubusercontent.com/mitrodex/lumen/main/docs/demo/home.ics` (also `work.ics`, `friends.ics`).
 
 ## Build from source
 
