@@ -34,23 +34,43 @@ Tested on a **Fire TV Stick (3rd gen), Fire OS 7.7**. Other Fire TV devices prob
 
 ## Install
 
-You need a computer with [ADB](https://developer.android.com/tools/releases/platform-tools)
-and your Fire TV in the same network.
+For now you need a computer (Windows, Mac or Linux) in the same WiFi as your Fire TV.
+A setup without a computer is planned.
 
-1. On the Fire TV: **Settings → My Fire TV → About** → click the device name 7 times. Then
-   **Developer options → ADB debugging: ON**. Note the IP address (**About → Network**).
-2. Download the latest `lumen-*.apk` from [Releases](../../releases).
-3. Install and switch everything on (allow the connection on the TV when asked):
+**1. Prepare the Fire TV** (once)
 
-   ```bash
-   ./tv-install.sh 192.168.1.50 lumen-v0.1.0.apk
-   ```
+- **Settings → My Fire TV → About** → click on the device name **7 times** until it says
+  "You are now a developer".
+- Back to **My Fire TV → Developer options** → **ADB debugging: ON**.
+- **About → Network**: note the **IP address** (something like `192.168.1.50`).
 
-   On Windows, from source: `tv-install.bat 192.168.1.50`.
+**2. Prepare the computer** (once)
 
-Press Home – welcome to Lumen. To go back to Amazon's home screen, uninstall Lumen
-(`adb uninstall de.tb.lumen`).
+- Download Google's [Android platform-tools](https://developer.android.com/tools/releases/platform-tools)
+  and unzip them. On Mac you can also run `brew install android-platform-tools`.
+- From the [latest release](../../releases/latest) download **`tv-install.bat`** (Windows) or
+  **`tv-install.sh`** (Mac/Linux) and put it into the unzipped `platform-tools` folder.
 
+**3. Install**
+
+Open a terminal in the `platform-tools` folder and run the script with your TV's IP address.
+It downloads Lumen, installs it and switches everything on:
+
+```bash
+# Windows
+tv-install.bat 192.168.1.50
+
+# Mac / Linux
+ADB=./adb sh tv-install.sh 192.168.1.50
+```
+
+The TV asks **"Allow USB debugging?"** the first time – choose **Always allow from this computer**
+and **OK**. Then press **Home** on your remote: welcome to Lumen.
+
+**Updates:** run the same command again – your favorites and settings stay.
+
+**Uninstall:** `adb uninstall de.tb.lumen` (or Settings → Applications → Lumen → Uninstall).
+Amazon's home screen is back immediately.
 ### Optional: calendar and episode images
 
 Both are off until you set them – no account needed:

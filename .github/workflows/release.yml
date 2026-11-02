@@ -1,9 +1,11 @@
 name: Release
 
-# Push a tag like v0.2.0 → tests, signed APK, GitHub release with the APK attached.
+# 1. Raise `lumenVersion` in app/build.gradle.kts (e.g. 0.2.0) and merge it.
+# 2. Push the matching tag: git tag v0.2.0 && git push origin v0.2.0
+# → tests, signed APK, GitHub release with the APK and the install scripts attached.
 #
-# Optional repository secrets for a stable signing key (otherwise the APK is signed with a
-# throwaway debug key, and users have to uninstall before updating):
+# Repository secrets for the signing key (Settings → Secrets and variables → Actions). Without
+# them the APK is signed with a throwaway debug key and can't update an earlier release.
 #   LUMEN_KEYSTORE_BASE64   base64 of the .jks file
 #   LUMEN_KEYSTORE_PASSWORD
 #   LUMEN_KEY_ALIAS
@@ -21,6 +23,14 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
+      - name: Tag matches version in build.gradle.kts
+        run: |
+          version=$(sed -n 's/^val lumenVersion = "\(.*\)"/\1/p' app/build.gradle.kts)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match lumenVersion $version in app/build.gradle.kts"
+            exit 1
+          fi
 
       - uses: actions/setup-java@v4
         with:
@@ -40,16 +50,17 @@ jobs:
       - name: Test and build
         run: ./gradlew testDebugUnitTest assembleRelease
         env:
-          VERSION_NAME: ${{ github.ref_name }}
-          VERSION_CODE: ${{ github.run_number }}
           LUMEN_KEYSTORE_PASSWORD: ${{ secrets.LUMEN_KEYSTORE_PASSWORD }}
           LUMEN_KEY_ALIAS: ${{ secrets.LUMEN_KEY_ALIAS }}
           LUMEN_KEY_PASSWORD: ${{ secrets.LUMEN_KEY_PASSWORD }}
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/release/app-release.apk "lumen-${GITHUB_REF_NAME}.apk"
+      - name: Collect release files
+        run: |
+          mkdir dist
+          cp app/build/outputs/apk/release/app-release.apk dist/lumen.apk
+          cp tv-install.sh tv-install.bat dist/
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: lumen-*.apk
+          files: dist/*
           generate_release_notes: true

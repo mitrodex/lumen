@@ -4,6 +4,14 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// Version: einzige Quelle. Für ein Release hier erhöhen und denselben Tag pushen (v0.1.0).
+val lumenVersion = "0.1.0"
+
+// Private Werte aus local.properties (nie im Repo).
+val localProps = rootProject.file("local.properties").takeIf { it.exists() }?.readLines().orEmpty()
+fun localProp(key: String): String? =
+    localProps.firstOrNull { it.startsWith("$key=") }?.substringAfter('=')?.trim()?.takeIf { it.isNotEmpty() }
+
 android {
     namespace = "de.tb.lumen"
     compileSdk = 35
@@ -12,29 +20,33 @@ android {
         applicationId = "de.tb.lumen"
         minSdk = 28
         targetSdk = 35
-        // CI setzt beides aus dem Git-Tag (v1.2.3) bzw. der Build-Nummer.
-        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1
-        versionName = System.getenv("VERSION_NAME") ?: "0.1-dev"
+        // 0.1.0 → 100, 1.2.3 → 10203: jede neue Version installiert sich über die alte.
+        versionCode = lumenVersion.split('.').fold(0) { acc, part -> acc * 100 + part.toInt() }
+        versionName = System.getenv("VERSION_SUFFIX")?.let { "$lumenVersion-$it" } ?: lumenVersion
         // Private Standardwerte aus local.properties (nie im Repo). Lassen sich auch zur Laufzeit
         // per ADB setzen, siehe Config.kt:
         //   tmdb.key=…          TMDB-Schlüssel (Folgenbild/-nummer)
         //   calendar.urls=a,b   veröffentlichte Kalender-Links (webcal://…)
-        val local = rootProject.file("local.properties").takeIf { it.exists() }?.readLines().orEmpty()
-        fun prop(key: String) = local.firstOrNull { it.startsWith("$key=") }?.substringAfter('=')?.trim().orEmpty()
-        buildConfigField("String", "TMDB_KEY", "\"${prop("tmdb.key")}\"")
-        buildConfigField("String", "CALENDAR_URLS", "\"${prop("calendar.urls")}\"")
+        buildConfigField("String", "TMDB_KEY", "\"${localProp("tmdb.key").orEmpty()}\"")
+        buildConfigField("String", "CALENDAR_URLS", "\"${localProp("calendar.urls").orEmpty()}\"")
     }
 
-    // Release-Schlüssel für veröffentlichte APKs (GitHub-Secrets, siehe .github/workflows/release.yml).
-    // Fehlt er, wird mit dem Debug-Key signiert – reicht zum Sideloaden auf den eigenen Stick.
-    val keystore = System.getenv("LUMEN_KEYSTORE")?.let { rootProject.file(it) }?.takeIf { it.exists() }
+    // Release-Schlüssel für veröffentlichte APKs: in CI aus GitHub-Secrets (Umgebung, siehe
+    // .github/workflows/release.yml), lokal aus local.properties:
+    //   signing.store=C:/pfad/lumen-release.jks
+    //   signing.password=…
+    //   signing.alias=lumen
+    // Fehlt er, wird mit dem Debug-Key signiert – reicht zum Ausprobieren, aber Updates einer
+    // offiziellen Version lassen sich dann nicht darüber installieren.
+
+    val keystore = (System.getenv("LUMEN_KEYSTORE") ?: localProp("signing.store"))?.let { rootProject.file(it) }?.takeIf { it.exists() }
     signingConfigs {
         if (keystore != null) {
             create("release") {
                 storeFile = keystore
-                storePassword = System.getenv("LUMEN_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("LUMEN_KEY_ALIAS")
-                keyPassword = System.getenv("LUMEN_KEY_PASSWORD")
+                storePassword = System.getenv("LUMEN_KEYSTORE_PASSWORD") ?: localProp("signing.password")
+                keyAlias = System.getenv("LUMEN_KEY_ALIAS") ?: localProp("signing.alias")
+                keyPassword = System.getenv("LUMEN_KEY_PASSWORD") ?: localProp("signing.password")
             }
         }
     }

@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
-# Builds Lumen (or takes a downloaded APK), installs it on the Fire TV and restores everything a
-# reinstall resets (home service, notification access, precompilation).
+# Installs Lumen on a Fire TV and switches on everything it needs (home button service,
+# notification access, screensaver, …). Run it again after every update.
 #
-#   ./tv-install.sh 192.168.1.50                 build from source and install
-#   ./tv-install.sh 192.168.1.50 lumen-v0.2.apk  install a downloaded release
+#   ./tv-install.sh 192.168.1.50              latest release (or your own build, inside the repo)
+#   ./tv-install.sh 192.168.1.50 lumen.apk    a specific APK
 #
-# Optional environment: ADB=/path/to/adb
+# Needs adb (Android platform-tools). Optional environment: ADB=/path/to/adb
 set -e
 cd "$(dirname "$0")"
 
@@ -14,13 +14,23 @@ TV="${1:-$FIRE_TV}"
 case "$TV" in *:*) ;; *) TV="$TV:5555" ;; esac
 ADB="${ADB:-adb}"
 APK="$2"
+command -v "$ADB" >/dev/null 2>&1 || { echo "adb not found – install Android platform-tools first."; exit 1; }
 
 if [ -z "$APK" ]; then
-  ./gradlew assembleRelease -q
-  APK=app/build/outputs/apk/release/app-release.apk
+  if [ -x ./gradlew ]; then
+    echo "Building Lumen …"
+    ./gradlew assembleRelease -q
+    APK=app/build/outputs/apk/release/app-release.apk
+  else
+    echo "Downloading the latest Lumen release …"
+    APK=lumen.apk
+    curl -fL -o "$APK" https://github.com/mitrodex/lumen/releases/latest/download/lumen.apk
+  fi
 fi
 
+echo "Connecting to $TV – if the TV asks \"Allow USB debugging?\", choose Allow."
 "$ADB" connect "$TV" >/dev/null
+"$ADB" -s "$TV" wait-for-device
 "$ADB" -s "$TV" install -r "$APK"
 s() { "$ADB" -s "$TV" shell "$@"; }
 for p in WRITE_SECURE_SETTINGS ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION READ_LOGS; do
@@ -34,4 +44,4 @@ s settings put secure voice_interaction_service de.tb.lumen/de.tb.lumen.LumenVoi
 s settings put secure voice_recognition_service de.tb.lumen/de.tb.lumen.LumenRecognitionService
 s cmd package compile -m speed -f de.tb.lumen >/dev/null
 s am start -n de.tb.lumen/.MainActivity >/dev/null
-echo "Lumen is installed."
+echo "Lumen is installed. Press Home on your remote."
