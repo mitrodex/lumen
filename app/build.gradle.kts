@@ -87,5 +87,5 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     // Echtes org.json – die Android-Version ist in Unit-Tests nur ein leerer Stub.
-    testImplementation("org.json:json:20240303")
+    testImplementation("org.json:json:20260814")
 }
