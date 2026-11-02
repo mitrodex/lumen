@@ -40,7 +40,7 @@ jobs:
           VERSION_SUFFIX: ci-${{ github.run_number }}
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lumen-apk
           path: app/build/outputs/apk/release/*.apk
@@ -48,7 +48,7 @@ jobs:
 
       - name: Upload test and lint reports
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: reports
           path: |
